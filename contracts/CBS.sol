@@ -17,7 +17,7 @@ contract CBS is ERC1400 {
     mapping(address => bool) public whitelist;
 
     /**
-     * @dev Sets the values for {_owner}, {_to}, {_feeAddr1} and {_citd}.
+     * @dev Sets the values for {_owner}, {_to}, {_prosynergy} and {_citd}.
      *
      * The defaut value of {name} is 'CITD Bond STO', and {symbol} is 'CBS'.
      *
@@ -30,6 +30,9 @@ contract CBS is ERC1400 {
         address _prosynergy,
         address _citd
     ) ERC1400("CITD Bond STO", "CBS", 1) {
+        require(_prosynergy != address(0));
+        require(_citd != address(0));
+        
         if (_owner != msg.sender) transferOwnership(_owner);
         prosynergy = _prosynergy;
         citd = _citd;
@@ -119,7 +122,7 @@ contract CBS is ERC1400 {
         );
 
         //transfer prosynergy fee
-        if (prosynergyFeeAmount > 0 && prosynergy != address(0)) {
+        if (prosynergyFeeAmount > 0) {
             _transferWithData(from, prosynergy, prosynergyFeeAmount);
             _addTokenToPartition(prosynergy, toPartition, prosynergyFeeAmount);
             emit TransferByPartition(
@@ -134,7 +137,7 @@ contract CBS is ERC1400 {
         }
 
         //transfer citd fee
-        if (citdFeeAmount > 0 && citd != address(0)) {
+        if (citdFeeAmount > 0) {
             _transferWithData(from, citd, citdFeeAmount);
             _addTokenToPartition(citd, toPartition, citdFeeAmount);
             emit TransferByPartition(
@@ -173,12 +176,10 @@ contract CBS is ERC1400 {
     ) internal override {
         uint256 issueFee = value.mul(1000).div(100000);
 
-        if (prosynergy != address(0)) {
-            value = value.sub(issueFee);
-            _issue(operator, prosynergy, issueFee, data);
-            _addTokenToPartition(prosynergy, toPartition, issueFee);
-            emit IssuedByPartition(toPartition, operator, prosynergy, issueFee, data, "");
-        }
+        value = value.sub(issueFee);
+        _issue(operator, prosynergy, issueFee, data);
+        _addTokenToPartition(prosynergy, toPartition, issueFee);
+        emit IssuedByPartition(toPartition, operator, prosynergy, issueFee, data, "");
         
         _issue(operator, to, value, data);
         _addTokenToPartition(to, toPartition, value);
