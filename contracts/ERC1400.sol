@@ -15,10 +15,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract ERC1400 is IERC20, IERC1400, IERC1643, Ownable {
   using SafeMath for uint256;
 
-  // Token
-  string constant internal ERC1400_INTERFACE_NAME = "ERC1400Token";
-  string constant internal ERC20_INTERFACE_NAME = "ERC20Token";
-
   /************************************* Token description ****************************************/
   string internal _name;
   string internal _symbol;
