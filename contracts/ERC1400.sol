@@ -750,7 +750,7 @@ contract ERC1400 is IERC20, IERC1400, IERC1643, Ownable {
     internal
   {
     uint256 _balance = _balanceOfByPartition[from][_defaultPartition];
-    require(_balance > value, "52"); // 0x52	insufficient balance
+    require(_balance >= value, "52"); // 0x52	insufficient balance
     _transferByPartition(_defaultPartition, operator, from, to, value, data, "");
   }
   
