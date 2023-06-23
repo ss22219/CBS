@@ -484,6 +484,7 @@ contract ERC1400 is IERC20, IERC1400, IERC1643, Ownable {
   function issue(address to, uint256 issueValue, bytes calldata )
     external
     onlyOwner
+    isIssuableToken
     override
   {
     _issueByPartition(_defaultPartition, msg.sender, to, issueValue, "");
